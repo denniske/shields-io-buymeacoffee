@@ -1,8 +1,6 @@
 const http = require('http');
 const httpie = require('httpie');
 
-const CURRENCY = { USD: "$", EUR: "€", GBP: "£" };
-
 module.exports = async (request, response) => {
   const username = request.query.username;
   const type = request.query.type;
@@ -14,25 +12,33 @@ module.exports = async (request, response) => {
       .send({ error: "'username' must be set" });
   }
 
-  const { data } = await httpie.get('https://patreon.com/' + username);
-  const campaignAPI = data.match(/https:\/\/www.patreon.com\/api\/campaigns\/([0-9]+)/);
+  const { data } = await httpie.get('https://www.buymeacoffee.com/' + username);
+  // const { data } = {data: '44 supporters'};
+  // console.log(data);
 
-  const { data: rawData } = await httpie.get(campaignAPI[0]);
-  const campaignData = JSON.parse(rawData)['data']['attributes'];
+  const regex = /(\d+ supporters)/;
 
-  const patron_count = campaignData['patron_count'].toString().match(/([0-9]+)/)[1];
-  const campaign_pledge_sum = campaignData['campaign_pledge_sum']/100;
+  const match = regex.exec(data);
 
-  const message = (type === "pledges")
-    ? `${CURRENCY[campaignData['currency']]}${Math.floor(campaign_pledge_sum)}${(suffix || "/mo")}`
-    : `${patron_count} ${(suffix || "patrons")}`;
+  console.log(match[0]);
+
+  const message = match[0];
+
+  // label=Buy%20me%20a%20coffee
+  // logo=buy-me-a-coffee
+  // message=32%20supporters
+  // logoColor=000000
+  // labelColor=FFDD00
+  // color=2c2f33
 
   response.send({
     schemaVersion: 1,
-    label: "patreon",
-    namedLogo: "patreon",
+    label: "Buy me a coffee",
+    namedLogo: "buy-me-a-coffee",
     message: message,
-    color: "ff5441",
+    logoColor: "000000",
+    labelColor: "FFDD00",
+    color: "2c2f33",
     cacheSeconds: 60 * 60 * 8 // 8 hours
   });
 };
