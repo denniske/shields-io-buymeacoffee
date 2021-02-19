@@ -117,7 +117,7 @@
       var style = document.querySelector('input[type=radio][name=style]:checked').value;
       var suffix = document.querySelector('input[name=suffix]').value;
 
-      var endpointUrl = `https://shieldsio-patreon.vercel.app/api?username=${username}&type=${type}`;
+      var endpointUrl = `https://shields-io-buymeacoffee.vercel.app/api?username=${username}&type=${type}`;
       if (suffix) { endpointUrl += `&suffix=${encodeURIComponent(suffix)}`; }
 
       imageSrc = `https://img.shields.io/endpoint.svg?url=${encodeURIComponent(endpointUrl)}&style=${style}`;
