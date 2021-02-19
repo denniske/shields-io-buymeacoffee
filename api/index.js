@@ -12,24 +12,20 @@ module.exports = async (request, response) => {
       .send({ error: "'username' must be set" });
   }
 
-  const { data } = await httpie.get('https://www.buymeacoffee.com/' + username);
-  // const { data } = {data: '44 supporters'};
-  // console.log(data);
+  let message = 'support me';
+  try {
+    const { data } = await httpie.get('https://www.buymeacoffee.com/' + username);
+    // const { data } = {data: '44 supporters'};
+    // console.log(data);
 
-  const regex = /(\d+ supporters)/;
+    const regex = /(\d+ supporters)/;
+    const match = regex.exec(data);
+    console.log(match[0]);
 
-  const match = regex.exec(data);
-
-  console.log(match[0]);
-
-  const message = match[0];
-
-  // label=Buy%20me%20a%20coffee
-  // logo=buy-me-a-coffee
-  // message=32%20supporters
-  // logoColor=000000
-  // labelColor=FFDD00
-  // color=2c2f33
+    message = match[0];
+  } catch (e) {
+    console.error(e);
+  }
 
   response.send({
     schemaVersion: 1,
